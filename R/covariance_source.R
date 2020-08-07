@@ -1,9 +1,4 @@
-# df - data frame with relevant columns profile, temperature, wt, pressure
-# mi_max - number of sampled points from each profile
-# knots - choice of knots
-# lambda - roughly corresponds to a starting point for lambda - but logged
-# basis - bspline basis used
-# penalty_mat - univariate bspline penalty matrix
+#' @export
 cov_est_example <-  function(df, mi_max = 50, knots, lambda, basis, penalty_mat) {
   # reduce size of data by randomly selecting 50 observations
   a <- proc.time()
@@ -43,7 +38,7 @@ cov_est_example <-  function(df, mi_max = 50, knots, lambda, basis, penalty_mat)
     return(Matrix::kronecker(design_mat_prelim[df$profile == x,],
                              design_mat_prelim[df$profile == x,]))})  
   prof_lengths <- aggregate(df$profile, list(df$profile), length)
-  Phi_init <- lapply(Phi_prelim, summary) 
+  Phi_init <- lapply(Phi_prelim, Matrix::summary) 
   prod_lengths <- sapply(Phi_prelim, nrow)
   rm(Phi_prelim)
   prod_lengths_sum <- cumsum(prod_lengths)
