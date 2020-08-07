@@ -24,7 +24,7 @@ penalizedCrossCovariance <- function(indexes1, values1, indexes2, values2,
                                      lower_optim = 10^0.25, upper_optim = 10^6){
   
   # Check the arguments first 
-  .check_arguments(indexes1, values1, indexes2, values2, intv1, intv2, nbasis, order, weights=NULL, lambda = 10)
+  .check_arguments_Cr(indexes1, values1, indexes2, values2, intv1, intv2, nbasis, order, weights=NULL, lambda = 10)
   
   # Use weights = 1 if not given
   if (is.null(weights)){
@@ -63,7 +63,7 @@ penalizedCrossCovariance <- function(indexes1, values1, indexes2, values2,
 }
 
 
-.check_arguments <- function(indexes1, values1, indexes2, values2, intv1,
+.check_arguments_Cr <- function(indexes1, values1, indexes2, values2, intv1,
                              intv2, nbasis, order, weights=NULL, lambda = 10, use_cv=FALSE){
   if (length(indexes1) != length(values1)){
     stop("The list of indexes1 and the list of functions1 must be of the same length.")
