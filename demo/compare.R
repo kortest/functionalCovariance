@@ -100,6 +100,14 @@ kronecker = Matrix::kronecker(spline, spline)
 
 # Comparison of actual covariance matrix at finite amount of points
 
+true = matrix(0, test_length, test_length)
+for (i in 1:test_length){
+  for (j in 1:test_length){
+    true[i,j] = min(p[i], p[j])
+  }
+}
+
+image(true, main = "Image plot of the covariance matrix at 100 equally space points in [0,1], the truth")
 
 
 # Old method
@@ -124,15 +132,6 @@ image(res2mat, main = "Image plot of the covariance matrix at 100 equally space 
 
 
 # Compare the actual numbers:
-
-
-
-true = matrix(0, test_length, test_length)
-for (i in 1:test_length){
-  for (j in 1:test_length){
-    true[i,j] = min(p[i], p[j])
-  }
-}
 
 frob1 = norm(true - res1mat)
 frob2 = norm(true - res2mat)
