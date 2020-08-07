@@ -7,6 +7,8 @@ library(dplyr)
 library(Rcpp)
 library(RcppGSL)
 library(mvtnorm)
+library(ggplot2)
+library(patchwork)
 
 # Set seed, change if required. 
 set.seed(100)
@@ -62,14 +64,21 @@ e2 = proc.time()
 
 # Look at matrix of coefficients
 
+
+
 # Old method
+
+
 beta = test1[[1]][[1]]
 beta = do.call(c, beta)
 beta_mat = matrix(beta, ncol=102, nrow = 102)
 image(beta_mat)
 
 
+
 # New method
+
+
 
 beta2_mat = matrix(0, n, n)
 beta2_mat[lower.tri(beta2_mat, diag=TRUE)] = test2
@@ -87,13 +96,20 @@ kronecker = Matrix::kronecker(spline, spline)
 # Comparison of actual covariance matrix at finite amount of points
 
 
+
 # Old method
+
+
 
 res1 = kronecker %*% beta
 res1mat = matrix(res1, test_length, test_length)
 image(res1mat)
 
+
+
 # New method
+
+
 
 beta2_vec = as.vector(beta2_mat)
 res2 = kronecker %*% beta2_vec
@@ -129,12 +145,13 @@ library(ggplot2)
 
 a <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res1-true))+
   geom_raster()+
-  scale_fill_gradient2(limits = c(-.1, .1))
+  scale_fill_gradient2(limits = c(-.1, .1))+
+  labs(subtitle = "Differences in the covariance matrix with less data, old method")
 b <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res2-true))+
   geom_raster()+
-  scale_fill_gradient2(limits = c(-.1, .1))
+  scale_fill_gradient2(limits = c(-.1, .1))+
+  labs(subtitle = "Differences in the covariance matrix with more data, new method")
 
-library(patchwork)
 a+b
 ggplot(data = compare_results, aes(x = p1, y = p2, 
                                    fill = abs(res1-true)-abs(res2-true)))+
