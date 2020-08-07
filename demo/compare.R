@@ -14,8 +14,8 @@ library(patchwork)
 set.seed(100)
 
 n = 102
-p_length = 500
-n_funcs = 500
+p_length = 350
+n_funcs = 270
 order = 4
 # Should at some point be amended to more meaningful weights
 weights = as.numeric(seq(1,1, length.out = n_funcs))
@@ -59,8 +59,13 @@ st = proc.time()
 test1 <- functionalCovariance::cov_est_example(df = df, mi_max = 50, knots = knots, lambda = 3,
                          basis = basis, penalty_mat = penalty_mat)
 e1 = proc.time()
+
+print(e1 - st)
+
 test2 = penalizedCovariance(func_indexes, funcs, 0.0, 1.0, n, penalty_mat, order=4, weights=NULL, lambda = 10, use_cv=TRUE, mixedOnly=FALSE)
 e2 = proc.time()
+
+print(e2 - e1)
 
 # Look at matrix of coefficients
 
@@ -72,7 +77,7 @@ e2 = proc.time()
 beta = test1[[1]][[1]]
 beta = do.call(c, beta)
 beta_mat = matrix(beta, ncol=102, nrow = 102)
-image(beta_mat)
+image(beta_mat, main = "Image plot of coefficient matrix using less data")
 
 
 
@@ -83,7 +88,7 @@ image(beta_mat)
 beta2_mat = matrix(0, n, n)
 beta2_mat[lower.tri(beta2_mat, diag=TRUE)] = test2
 beta2_mat = as.matrix(forceSymmetric(beta2_mat, 'L'))
-image(beta2_mat)
+image(beta2_mat, main = "Image plot of coefficient matrix using all data")
 
 # Create matrix of actual covariances
 test_length = 100
@@ -103,7 +108,7 @@ kronecker = Matrix::kronecker(spline, spline)
 
 res1 = kronecker %*% beta
 res1mat = matrix(res1, test_length, test_length)
-image(res1mat)
+image(res1mat, main = "Image plot of the covariance matrix at 100 equally space points in [0,1], less data")
 
 
 
@@ -114,7 +119,7 @@ image(res1mat)
 beta2_vec = as.vector(beta2_mat)
 res2 = kronecker %*% beta2_vec
 res2mat = matrix(res2, test_length, test_length)
-image(res2mat)
+image(res2mat, main = "Image plot of the covariance matrix at 100 equally space points in [0,1], all data")
 
 
 
@@ -141,7 +146,6 @@ compare_results <- data.frame(
   true = as.vector(true)
 )
 
-library(ggplot2)
 
 a <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res1-true))+
   geom_raster()+
@@ -153,6 +157,7 @@ b <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res2-true))+
   labs(subtitle = "New method, more data")
 
 a+b
+
 ggplot(data = compare_results, aes(x = p1, y = p2, 
                                    fill = abs(res1-true)-abs(res2-true)))+
   geom_raster()+
