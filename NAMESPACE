@@ -1,2 +1,5 @@
 useDynLib(functionalCovariance, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+export(penalizedCovariance)
+export(penalizedCrossCovariance)
+export(cov_est_example)
