@@ -61,10 +61,15 @@ test2 = penalizedCovariance(func_indexes, funcs, 0.0, 1.0, n, penalty_mat, order
 e2 = proc.time()
 
 # Look at matrix of coefficients
+
+# Old method
 beta = test1[[1]][[1]]
 beta = do.call(c, beta)
 beta_mat = matrix(beta, ncol=102, nrow = 102)
 image(beta_mat)
+
+
+# New method
 
 beta2_mat = matrix(0, n, n)
 beta2_mat[lower.tri(beta2_mat, diag=TRUE)] = test2
@@ -79,18 +84,28 @@ p = seq(0, 1, length.out = test_length)
 spline = as(eval.basis(p, basis), 'dgRMatrix')
 kronecker = Matrix::kronecker(spline, spline)
 
+# Comparison of actual covariance matrix at finite amount of points
+
+
 # Old method
+
 res1 = kronecker %*% beta
 res1mat = matrix(res1, test_length, test_length)
 image(res1mat)
 
 # New method
+
 beta2_vec = as.vector(beta2_mat)
 res2 = kronecker %*% beta2_vec
 res2mat = matrix(res2, test_length, test_length)
 image(res2mat)
 
+
+
 # Compare the actual numbers:
+
+
+
 true = matrix(0, test_length, test_length)
 for (i in 1:test_length){
   for (j in 1:test_length){
