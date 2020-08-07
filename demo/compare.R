@@ -14,7 +14,7 @@ library(patchwork)
 set.seed(100)
 
 n = 102
-p_length = 50
+p_length = 500
 n_funcs = 500
 order = 4
 # Should at some point be amended to more meaningful weights
@@ -146,11 +146,11 @@ library(ggplot2)
 a <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res1-true))+
   geom_raster()+
   scale_fill_gradient2(limits = c(-.1, .1))+
-  labs(subtitle = "Differences in the covariance matrix with less data, old method")
+  labs(subtitle = "Old method, less data")
 b <- ggplot(data = compare_results, aes(x = p1, y = p2, fill = res2-true))+
   geom_raster()+
   scale_fill_gradient2(limits = c(-.1, .1))+
-  labs(subtitle = "Differences in the covariance matrix with more data, new method")
+  labs(subtitle = "New method, more data")
 
 a+b
 ggplot(data = compare_results, aes(x = p1, y = p2, 
