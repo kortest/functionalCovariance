@@ -1,5 +1,5 @@
 # implement grid
-# library(argofda) # requires package from paper
+library(argofda) # requires package from paper
 library(Matrix)
 library(fda)
 library(sparseinv)
@@ -28,13 +28,13 @@ funcs = lapply(func_indexes, function(x){
       Sigma[j,i] = x[i]
     }
   }
-  return(rmvnorm(1, sigma = Sigma))
+  return(mvtnorm::rmvnorm(1, sigma = Sigma))
 })
 
 # choice of knots
 knots <- seq(0, 1, length.out = n-2)
-basis <- create.bspline.basis(knots)
-penalty_mat <- bsplinepen(basis)
+basis <- fda::create.bspline.basis(knots)
+penalty_mat <- fda::bsplinepen(basis)
 
 profiles = rep(seq(1,n_funcs,1),seq(p_length,p_length, length.out = n_funcs))
 weights = seq(1,1, length.out = n_funcs)
@@ -54,10 +54,10 @@ profile_lengths_50 <- ifelse(profile_lengths > 50, 50, profile_lengths)
 sum(profile_lengths_50 * (profile_lengths_50-1))
 
 st = proc.time()
-test1 <- cov_est_example(df = df, mi_max = 50, knots = knots, lambda = 3,
+test1 <- functionalCovariance::cov_est_example(df = df, mi_max = 50, knots = knots, lambda = 3,
                          basis = basis, penalty_mat = penalty_mat)
 e1 = proc.time()
-test2 = penalizedCovariance(func_indexes, funcs, 0.0, 1.0, n, order=4, weights=NULL, lambda = 10, use_cv=TRUE, mixedOnly=FALSE)
+test2 = penalizedCovariance(func_indexes, funcs, 0.0, 1.0, n, penalty_mat, order=4, weights=NULL, lambda = 10, use_cv=TRUE, mixedOnly=FALSE)
 e2 = proc.time()
 
 # Look at matrix of coefficients
