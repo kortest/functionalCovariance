@@ -1,0 +1,9 @@
+## Use the R_HOME indirection to support installations of multiple R version
+PKG_LIBS = `$(R_HOME)/bin/Rscript -e "RcppGSL:::LdFlags()"`
+VER=-10
+CC=gcc$(VER)
+CXX=g++$(VER)
+CXX11=g++$(VER)
+CXX14=g++$(VER)
+CXX17=g++$(VER)
+FLIBS=-L/usr/local/Cellar/gcc/10.1.0/lib/gcc/10
