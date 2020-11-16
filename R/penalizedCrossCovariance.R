@@ -46,7 +46,7 @@ penalizedCrossCovariance <- function(indexes1, values1, indexes2, values2,
   # Check if cv is wanted
   if (use_cv){
     # Perform the optimization
-    mult = sum(diag(penalty)) / sum(diag(fullDesign[[1]]))
+    mult = sum(Matrix::diag(penalty)) / sum(Matrix::diag(fullDesign[[1]]))
  #   lower_optim = 10^0.25; upper_optim = 10^6
     tol = 1e-3
     opt_result = stats::optimize(generalizedCrossValidationCrC,
